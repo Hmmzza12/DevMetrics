@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap');
+@import 'tailwindcss';
+
+/**
+ * DevMetrics design system — dark theme only.
+ * Tokens are defined once here and exposed to Tailwind via @theme, so
+ * components use `bg-surface`, `text-muted`, `border-border`, etc. instead of
+ * hardcoded hex values.
+ */
+@theme {
+  --color-background: #0a0a0f;
+  --color-surface: #111118;
+  --color-border: #1e1e2e;
+  --color-primary: #6366f1;
+  --color-secondary: #a855f7;
+  --color-text: #e2e8f0;
+  --color-muted: #64748b;
+  --color-success: #22c55e;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Sora', ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+::selection {
+  background-color: rgba(99, 102, 241, 0.4);
+}
+
+/* Thin, unobtrusive scrollbar matching the dark palette. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-muted);
+}
+
+/* Slow-moving radial gradient for the landing hero — pure CSS, no library. */
+@keyframes hero-gradient-drift {
+  0% {
+    background-position:
+      20% 20%,
+      80% 80%;
+  }
+  50% {
+    background-position:
+      60% 40%,
+      40% 60%;
+  }
+  100% {
+    background-position:
+      20% 20%,
+      80% 80%;
+  }
+}
+
+.hero-gradient {
+  background-image:
+    radial-gradient(circle at center, rgba(99, 102, 241, 0.4), rgba(99, 102, 241, 0) 60%),
+    radial-gradient(circle at center, rgba(168, 85, 247, 0.32), rgba(168, 85, 247, 0) 60%);
+  background-size: 65% 65%, 55% 55%;
+  background-repeat: no-repeat;
+  animation: hero-gradient-drift 18s ease-in-out infinite;
+}
