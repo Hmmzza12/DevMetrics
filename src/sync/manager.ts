@@ -16,8 +16,11 @@ const WORKER_URL = new URL('./worker.ts', import.meta.url);
 function spawnWorker(jobId: number): void {
   const worker = new Worker(WORKER_URL, {
     workerData: { jobId },
-    // Load tsx inside the worker so it can import the TypeScript sources.
-    execArgv: ['--import', 'tsx'],
+    // Inherit the parent's actual loader flags (tsx's CLI resolves these to
+    // absolute file:// URLs at boot) instead of re-guessing a bare '--import
+    // tsx', which resolves unreliably across worker threads on some Node
+    // versions and was silently failing every sync in production.
+    execArgv: process.execArgv,
   });
 
   worker.on('error', async (err) => {
