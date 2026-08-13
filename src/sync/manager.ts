@@ -11,16 +11,15 @@ import { createJob, markFailed } from './queue.ts';
  * single-active-job rule).
  */
 
-const WORKER_URL = new URL('./worker.ts', import.meta.url);
+// Plain .mjs entry that registers the tsx loader in-thread (via `tsx/esm/api`)
+// before importing worker.ts. `--import` execArgv loader hooks don't reliably
+// propagate into worker_threads on some Node versions, which was silently
+// failing every sync in production — this sidesteps that entirely.
+const WORKER_URL = new URL('./worker-entry.mjs', import.meta.url);
 
 function spawnWorker(jobId: number): void {
   const worker = new Worker(WORKER_URL, {
     workerData: { jobId },
-    // Inherit the parent's actual loader flags (tsx's CLI resolves these to
-    // absolute file:// URLs at boot) instead of re-guessing a bare '--import
-    // tsx', which resolves unreliably across worker threads on some Node
-    // versions and was silently failing every sync in production.
-    execArgv: process.execArgv,
   });
 
   worker.on('error', async (err) => {
