@@ -14,10 +14,12 @@ import {
   findPublicProfile,
   getPublicStatus,
   InvalidUsernameError,
+  needsGitHubFetch,
   normalizeAndValidate,
   PublicLookupDisabledError,
   triggerPublicSync,
 } from '../services/public-profiles.ts';
+import { consumeLookups } from '../lib/lookup-budget.ts';
 
 interface UsernameParams {
   username: string;
@@ -103,15 +105,29 @@ export async function publicRoutes(app: FastifyInstance): Promise<void> {
     }
   });
 
-  // Trigger a public sync — the ONLY per-IP rate-limited route.
+  // Trigger a public sync. Charged against the shared per-IP lookup budget
+  // (see lib/lookup-budget.ts) — the same bucket /api/compare draws two units
+  // from, so comparisons can't be used to double a caller's GitHub reach.
   app.post(
     '/api/public/:username/sync',
-    { config: { rateLimit: { max: 10, timeWindow: '1 hour' } } },
     async (request, reply) => {
+      const raw = (request.params as UsernameParams).username;
+
+      // Only a lookup that will actually reach GitHub costs budget; serving a
+      // fresh cache is free.
+      const cost = (await needsGitHubFetch(raw)) ? 1 : 0;
+      if (cost > 0) {
+        const budget = consumeLookups(request.ip, cost);
+        if (!budget.allowed) {
+          return reply.code(429).send({
+            error: 'rate_limited',
+            reset_at: new Date(budget.resetAt).toISOString(),
+          });
+        }
+      }
+
       try {
-        const result = await triggerPublicSync(
-          (request.params as UsernameParams).username,
-        );
+        const result = await triggerPublicSync(raw);
         return {
           job_id: result.jobId,
           status: result.status,

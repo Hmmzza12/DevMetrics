@@ -18,6 +18,7 @@ import { Route as DashboardLanguagesRouteImport } from './routes/dashboard/langu
 import { Route as DashboardPrsRouteImport } from './routes/dashboard/prs'
 import { Route as DashboardReposRouteImport } from './routes/dashboard/repos'
 import { Route as UUsernameRouteRouteImport } from './routes/u/$username/route'
+import { Route as CompareUserAUserBRouteImport } from './routes/compare/$userA.$userB'
 import { Route as UUsernameIndexRouteImport } from './routes/u/$username/index'
 import { Route as UUsernameCommitPatternsRouteImport } from './routes/u/$username/commit-patterns'
 import { Route as UUsernameHeatmapRouteImport } from './routes/u/$username/heatmap'
@@ -70,6 +71,11 @@ const UUsernameRouteRoute = UUsernameRouteRouteImport.update({
   path: '/u/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareUserAUserBRoute = CompareUserAUserBRouteImport.update({
+  id: '/compare/$userA/$userB',
+  path: '/compare/$userA/$userB',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UUsernameIndexRoute = UUsernameIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/prs': typeof DashboardPrsRoute
   '/dashboard/repos': typeof DashboardReposRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/compare/$userA/$userB': typeof CompareUserAUserBRoute
   '/u/$username/commit-patterns': typeof UUsernameCommitPatternsRoute
   '/u/$username/heatmap': typeof UUsernameHeatmapRoute
   '/u/$username/languages': typeof UUsernameLanguagesRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/dashboard/prs': typeof DashboardPrsRoute
   '/dashboard/repos': typeof DashboardReposRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/compare/$userA/$userB': typeof CompareUserAUserBRoute
   '/u/$username/commit-patterns': typeof UUsernameCommitPatternsRoute
   '/u/$username/heatmap': typeof UUsernameHeatmapRoute
   '/u/$username/languages': typeof UUsernameLanguagesRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/dashboard/prs': typeof DashboardPrsRoute
   '/dashboard/repos': typeof DashboardReposRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/compare/$userA/$userB': typeof CompareUserAUserBRoute
   '/u/$username/commit-patterns': typeof UUsernameCommitPatternsRoute
   '/u/$username/heatmap': typeof UUsernameHeatmapRoute
   '/u/$username/languages': typeof UUsernameLanguagesRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/dashboard/prs'
     | '/dashboard/repos'
     | '/dashboard/'
+    | '/compare/$userA/$userB'
     | '/u/$username/commit-patterns'
     | '/u/$username/heatmap'
     | '/u/$username/languages'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/dashboard/prs'
     | '/dashboard/repos'
     | '/dashboard'
+    | '/compare/$userA/$userB'
     | '/u/$username/commit-patterns'
     | '/u/$username/heatmap'
     | '/u/$username/languages'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/dashboard/prs'
     | '/dashboard/repos'
     | '/dashboard/'
+    | '/compare/$userA/$userB'
     | '/u/$username/commit-patterns'
     | '/u/$username/heatmap'
     | '/u/$username/languages'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   UUsernameRouteRoute: typeof UUsernameRouteRouteWithChildren
+  CompareUserAUserBRoute: typeof CompareUserAUserBRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/u/$username'
       fullPath: '/u/$username'
       preLoaderRoute: typeof UUsernameRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare/$userA/$userB': {
+      id: '/compare/$userA/$userB'
+      path: '/compare/$userA/$userB'
+      fullPath: '/compare/$userA/$userB'
+      preLoaderRoute: typeof CompareUserAUserBRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/u/$username/': {
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
   UUsernameRouteRoute: UUsernameRouteRouteWithChildren,
+  CompareUserAUserBRoute: CompareUserAUserBRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

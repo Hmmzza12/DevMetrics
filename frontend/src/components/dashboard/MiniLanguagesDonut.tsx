@@ -1,6 +1,6 @@
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import type { LanguageBreakdown } from '@/api/types';
 import { colorForIndex } from '@/lib/language-colors';
+import { LanguageDonutRing } from './LanguageDonutRing';
 
 export function MiniLanguagesDonut({ languages }: { languages: LanguageBreakdown[] }) {
   const top = languages.slice(0, 6);
@@ -16,24 +16,11 @@ export function MiniLanguagesDonut({ languages }: { languages: LanguageBreakdown
   return (
     <div className="flex items-center gap-4">
       <div className="h-36 w-36 shrink-0">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={top}
-              dataKey="percentage"
-              nameKey="language"
-              innerRadius="65%"
-              outerRadius="100%"
-              paddingAngle={2}
-              stroke="none"
-              isAnimationActive={false}
-            >
-              {top.map((entry, i) => (
-                <Cell key={entry.language} fill={colorForIndex(i)} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
+        <LanguageDonutRing
+          languages={top}
+          innerRadius="65%"
+          outerRadius="100%"
+        />
       </div>
       <ul className="flex flex-col gap-1.5 text-sm">
         {top.map((lang, i) => (

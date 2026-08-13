@@ -7,10 +7,40 @@ import {
   ResponsiveContainer,
   Tooltip,
   CartesianGrid,
+  Legend,
 } from 'recharts';
-import type { CommitPatterns } from '@/api/types';
 
-export function DayOfWeekBarChart({ data }: { data: CommitPatterns['by_day_of_week'] }) {
+export interface BarSeries {
+  /** Key to read from each row. */
+  key: string;
+  /** Legend/tooltip label. */
+  name: string;
+  color: string;
+}
+
+const DEFAULT_SERIES: BarSeries[] = [
+  { key: 'count', name: 'Commits', color: '#6366f1' },
+];
+
+interface DayOfWeekBarChartProps {
+  /**
+   * Rows keyed by `day`, plus one field per series. A null value means "this
+   * user has no data yet" and is skipped rather than drawn as a zero bar.
+   */
+  data: Record<string, string | number | null>[];
+  /**
+   * One bar per series, grouped per day. Defaults to the single `count` bar
+   * used by single-profile mode; comparison passes one series per user.
+   */
+  series?: BarSeries[];
+}
+
+export function DayOfWeekBarChart({
+  data,
+  series = DEFAULT_SERIES,
+}: DayOfWeekBarChartProps) {
+  const showLegend = series.length > 1;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -43,7 +73,18 @@ export function DayOfWeekBarChart({ data }: { data: CommitPatterns['by_day_of_we
               fontSize: 12,
             }}
           />
-          <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
+          {showLegend && (
+            <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} iconType="circle" />
+          )}
+          {series.map((s) => (
+            <Bar
+              key={s.key}
+              dataKey={s.key}
+              name={s.name}
+              fill={s.color}
+              radius={[4, 4, 0, 0]}
+            />
+          ))}
         </BarChart>
       </ResponsiveContainer>
     </motion.div>

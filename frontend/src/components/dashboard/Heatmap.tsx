@@ -53,6 +53,12 @@ interface HeatmapProps {
   cellSize?: number;
   gap?: number;
   showLabels?: boolean;
+  /**
+   * Intensity denominator. Defaults to this heatmap's own busiest day. Pass the
+   * max across several heatmaps to put them on one scale — without it a user
+   * peaking at 3 commits/day looks identical to one peaking at 50.
+   */
+  maxOverride?: number;
 }
 
 /**
@@ -60,9 +66,16 @@ interface HeatmapProps {
  * 53 columns x 7 rows for the full year, fewer columns for a sliced preview.
  * No entrance animation on the squares (spec) — only hover scale + tooltip.
  */
-export function Heatmap({ days, cellSize = 11, gap = 3, showLabels = true }: HeatmapProps) {
+export function Heatmap({
+  days,
+  cellSize = 11,
+  gap = 3,
+  showLabels = true,
+  maxOverride,
+}: HeatmapProps) {
   const weeks = useMemo(() => buildWeeks(days), [days]);
-  const max = useMemo(() => Math.max(1, ...days.map((d) => d.count)), [days]);
+  const ownMax = useMemo(() => Math.max(1, ...days.map((d) => d.count)), [days]);
+  const max = maxOverride != null ? Math.max(1, maxOverride) : ownMax;
   const [hovered, setHovered] = useState<{ cell: HeatmapDay; x: number; y: number } | null>(
     null,
   );

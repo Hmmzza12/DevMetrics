@@ -5,18 +5,28 @@ import { intensityColor } from '@/lib/color-scale';
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const HOUR_TICKS = [0, 6, 12, 18];
 
+interface HourGridProps {
+  grid: number[][];
+  /**
+   * Intensity denominator. Defaults to this grid's own busiest hour. Pass the
+   * max across several grids to put them on one comparable scale.
+   */
+  maxOverride?: number;
+}
+
 /** Custom SVG hour-of-day x day-of-week grid — 24 columns x 7 rows. Not a chart library. */
-export function HourGrid({ grid }: { grid: number[][] }) {
+export function HourGrid({ grid, maxOverride }: HourGridProps) {
   const cell = 20;
   const labelGutter = 34;
   const topGutter = 18;
   const width = labelGutter + 24 * cell;
   const height = topGutter + 7 * cell;
 
-  const max = useMemo(
+  const ownMax = useMemo(
     () => Math.max(1, ...grid.flatMap((row) => row)),
     [grid],
   );
+  const max = maxOverride != null ? Math.max(1, maxOverride) : ownMax;
 
   return (
     <motion.div

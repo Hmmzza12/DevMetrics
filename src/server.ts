@@ -14,6 +14,7 @@ import {
 } from './lib/session.ts';
 import { apiRoutes } from './routes/api.ts';
 import { authRoutes } from './routes/auth.ts';
+import { compareRoutes } from './routes/compare.ts';
 import { publicRoutes } from './routes/public.ts';
 
 export async function buildServer() {
@@ -78,6 +79,7 @@ export async function buildServer() {
   await app.register(authRoutes);
   await app.register(apiRoutes);
   await app.register(publicRoutes);
+  await app.register(compareRoutes);
 
   return app;
 }

@@ -1,5 +1,7 @@
 import type {
   CommitPatterns,
+  CompareResponse,
+  CompareStatusResponse,
   Heatmap,
   Languages,
   Me,
@@ -91,10 +93,19 @@ export const api = {
   publicStatus: (u: string) => request<PublicStatusResponse>(pub(u, 'status')),
   publicSync: (u: string) =>
     request<PublicSyncResponse>(pub(u, 'sync'), { method: 'POST' }),
+
+  // ── Comparison (no auth) ─────────────────────────────────────────────────
+  compare: (a: string, b: string) => request<CompareResponse>(cmp(a, b)),
+  compareStatus: (a: string, b: string) =>
+    request<CompareStatusResponse>(`${cmp(a, b)}/status`),
 };
 
 function pub(username: string, path: string): string {
   return `/api/public/${encodeURIComponent(username)}/${path}`;
+}
+
+function cmp(a: string, b: string): string {
+  return `/api/compare/${encodeURIComponent(a)}/${encodeURIComponent(b)}`;
 }
 
 export const githubLoginUrl = `${API_URL}/auth/github`;

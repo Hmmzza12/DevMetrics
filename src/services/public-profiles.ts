@@ -72,6 +72,22 @@ export function isFresh(profile: User): boolean {
   );
 }
 
+/**
+ * Whether resolving this username would reach GitHub right now — false when a
+ * fresh cached profile already exists, or the username can't be valid. Callers
+ * charge the per-IP lookup budget on this, so cached reads stay free.
+ */
+export async function needsGitHubFetch(input: string): Promise<boolean> {
+  let username: string;
+  try {
+    username = normalizeAndValidate(input);
+  } catch {
+    return false;
+  }
+  const profile = await findPublicProfile(username);
+  return !profile || !isFresh(profile);
+}
+
 export interface TriggerResult {
   jobId: number | null;
   status: string;

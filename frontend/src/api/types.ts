@@ -117,3 +117,53 @@ export interface PublicSyncResponse {
   status: SyncStatus;
   cached: boolean;
 }
+
+// ── Profile comparison ─────────────────────────────────────────────────────
+export type CompareSideState =
+  | 'ready'
+  | 'syncing'
+  | 'not_found'
+  | 'invalid'
+  | 'rate_limited'
+  | 'unavailable'
+  | 'error';
+
+export interface CompareSideData {
+  overview: Overview;
+  heatmap: Heatmap;
+  languages: Languages;
+  commit_patterns: CommitPatterns;
+  prs: PRMetrics;
+  repos: Repo[];
+}
+
+export interface CompareSide {
+  username: string;
+  state: CompareSideState;
+  avatar_url: string | null;
+  progress: number;
+  error: string | null;
+  reset_at: string | null;
+  data: CompareSideData | null;
+}
+
+export interface CompareResponse {
+  userA: CompareSide;
+  userB: CompareSide;
+}
+
+export interface CompareSideStatus {
+  username: string;
+  state: CompareSideState;
+  avatar_url: string | null;
+  status: SyncStatus;
+  progress: number;
+  error: string | null;
+  fresh: boolean;
+  is_empty: boolean;
+}
+
+export interface CompareStatusResponse {
+  userA: CompareSideStatus;
+  userB: CompareSideStatus;
+}

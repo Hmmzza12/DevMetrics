@@ -1,8 +1,8 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { motion } from 'framer-motion';
 import type { LanguageBreakdown } from '@/api/types';
 import { colorForIndex } from '@/lib/language-colors';
 import { cn } from '@/lib/utils';
+import { LanguageDonutRing } from './LanguageDonutRing';
 
 const legendVariants = {
   hidden: {},
@@ -27,39 +27,12 @@ export function LanguagesDonut({ languages, selected, onSelect }: LanguagesDonut
   return (
     <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-center">
       <div className="h-64 w-64 shrink-0">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={languages}
-              dataKey="percentage"
-              nameKey="language"
-              innerRadius="60%"
-              outerRadius="95%"
-              paddingAngle={2}
-              stroke="none"
-              isAnimationActive={false}
-            >
-              {languages.map((entry, i) => (
-                <Cell
-                  key={entry.language}
-                  fill={colorForIndex(i)}
-                  fillOpacity={!selected || selected === entry.language ? 1 : 0.25}
-                  className="cursor-pointer outline-none"
-                  onClick={() => toggle(entry.language)}
-                />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{
-                background: '#111118',
-                border: '1px solid #1e1e2e',
-                borderRadius: 8,
-                fontSize: 12,
-              }}
-              formatter={(value, name) => [`${Number(value).toFixed(1)}%`, name]}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+        <LanguageDonutRing
+          languages={languages}
+          selected={selected}
+          onSelect={toggle}
+          showTooltip
+        />
       </div>
 
       <motion.ul
