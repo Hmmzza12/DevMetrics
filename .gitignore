@@ -10,3 +10,7 @@ local.db-*
 .DS_Store
 drizzle/meta/_journal.json.bak
 .vercel
+
+# Local tooling artifacts
+.claude/
+.tanstack/
