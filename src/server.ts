@@ -35,9 +35,18 @@ export async function buildServer() {
   // reads and status checks are never counted.
   await app.register(rateLimit, { global: false });
 
-  // CORS — allow only the frontend origin, with credentials (cookies).
+  // CORS — in dev allow any localhost port (Vite may pick a non-default port);
+  // in production lock to the configured FRONTEND_URL.
   await app.register(cors, {
-    origin: env.FRONTEND_URL,
+    origin: isProd
+      ? env.FRONTEND_URL
+      : (origin, cb) => {
+          if (!origin || /^https?:\/\/localhost(:\d+)?$/.test(origin)) {
+            cb(null, true);
+          } else {
+            cb(new Error('Not allowed by CORS'), false);
+          }
+        },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
