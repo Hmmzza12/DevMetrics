@@ -9,3 +9,4 @@ local.db-*
 *.sqlite-*
 .DS_Store
 drizzle/meta/_journal.json.bak
+.vercel
