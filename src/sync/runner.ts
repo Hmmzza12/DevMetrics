@@ -88,9 +88,10 @@ export async function runSync(jobId: number): Promise<void> {
         updatedAt: r.updatedAt ? new Date(r.updatedAt) : null,
       })
       .onConflictDoUpdate({
-        target: repos.githubId,
+        // Matched per (owner, repo) — never reassign `ownerId`, which would
+        // hand another profile's repos to this one.
+        target: [repos.ownerId, repos.githubId],
         set: {
-          ownerId: user.id,
           name: r.name,
           description: r.description,
           primaryLanguage: r.primaryLanguage,

@@ -77,7 +77,12 @@ export const repos = sqliteTable(
     updatedAt: integer('updated_at', { mode: 'timestamp_ms' }),
   },
   (t) => [
-    uniqueIndex('repos_github_id_uq').on(t.githubId),
+    // Scoped per owner, NOT globally: the same GitHub repo can legitimately be
+    // tracked by more than one row in `users` (e.g. a public-lookup profile and
+    // the OAuth account for that same person). Per-owner columns like
+    // `commitCount` live on this row, so a global unique on github_id let one
+    // sync steal every repo from another profile by reassigning owner_id.
+    uniqueIndex('repos_owner_github_uq').on(t.ownerId, t.githubId),
     index('repos_owner_idx').on(t.ownerId),
   ],
 );
