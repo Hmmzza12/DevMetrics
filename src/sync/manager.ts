@@ -1,7 +1,10 @@
 import { Worker } from 'node:worker_threads';
+import { waitUntil } from '@vercel/functions';
 import { SYNC_STALE_MS } from '../config/env.ts';
 import type { SyncJob } from '../db/schema.ts';
+import { RateLimitError, UserNotFoundError } from '../github/client.ts';
 import { createJob, markFailed } from './queue.ts';
+import { runSync } from './runner.ts';
 
 /**
  * Owns the worker_threads lifecycle for background syncs.
@@ -36,12 +39,38 @@ function spawnWorker(jobId: number): void {
 }
 
 /**
+ * Vercel Functions cannot leave an independent worker running after the HTTP
+ * response completes. `waitUntil` keeps the invocation alive while the same
+ * sync pipeline processes the Turso-backed job. Traditional Node hosts keep
+ * using the worker-thread path above.
+ */
+async function runServerlessJob(jobId: number): Promise<void> {
+  try {
+    await runSync(jobId);
+  } catch (err) {
+    if (err instanceof RateLimitError) {
+      await markFailed(jobId, 'rate_limit_low', err.resetAt);
+    } else if (err instanceof UserNotFoundError) {
+      await markFailed(jobId, 'user_not_found');
+    } else {
+      await markFailed(jobId, (err as Error)?.message ?? 'sync_failed');
+    }
+  }
+}
+
+/**
  * Ensure a sync is running for the user. Returns the active or newly-created
  * job. Spawns a worker only for a freshly-created job.
  */
 export async function enqueueSync(userId: number): Promise<SyncJob> {
   const { job, created } = await createJob(userId);
-  if (created) spawnWorker(job.id);
+  if (created) {
+    if (process.env.VERCEL) {
+      waitUntil(runServerlessJob(job.id));
+    } else {
+      spawnWorker(job.id);
+    }
+  }
   return job;
 }
 
