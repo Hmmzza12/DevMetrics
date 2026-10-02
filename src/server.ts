@@ -108,5 +108,5 @@ const isMain =
   process.argv[1] &&
   resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1]);
 if (isMain || process.env.VERCEL) {
-  void main();
+  await main();
 }
