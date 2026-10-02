@@ -11,9 +11,3 @@ declare module 'fastify' {
     user?: User;
   }
 }
-
-declare module '@fastify/secure-session' {
-  interface SessionData {
-    userId: number;
-  }
-}

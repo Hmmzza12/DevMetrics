@@ -4,14 +4,8 @@ import cookie from '@fastify/cookie';
 import cors from '@fastify/cors';
 import oauth2 from '@fastify/oauth2';
 import rateLimit from '@fastify/rate-limit';
-import secureSession from '@fastify/secure-session';
 import Fastify from 'fastify';
 import { env, isProd } from './config/env.js';
-import {
-  SESSION_COOKIE_NAME,
-  sessionCookieOptions,
-  sessionKey,
-} from './lib/session.js';
 import { apiRoutes } from './routes/api.js';
 import { authRoutes } from './routes/auth.js';
 import { compareRoutes } from './routes/compare.js';
@@ -53,13 +47,6 @@ export async function buildServer() {
 
   // Cookies (also used by @fastify/oauth2 for its state cookie).
   await app.register(cookie);
-
-  // Encrypted, httpOnly session cookie carrying just the user id.
-  await app.register(secureSession, {
-    key: sessionKey,
-    cookieName: SESSION_COOKIE_NAME,
-    cookie: sessionCookieOptions,
-  });
 
   // GitHub OAuth2 — registers `GET /auth/github` (start) automatically.
   await app.register(oauth2, {

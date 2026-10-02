@@ -1,4 +1,9 @@
-import { createHash } from 'node:crypto';
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHash,
+  randomBytes,
+} from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import type {
   FastifyReply,
@@ -10,12 +15,9 @@ import { db } from '../db/client.js';
 import { users } from '../db/schema.js';
 
 /**
- * Session config for @fastify/secure-session.
- *
- * The session payload (just the user id) is AES-encrypted inside an httpOnly
- * cookie — stateless, survives restarts, and the raw access token never leaves
- * the database. In production the cookie is cross-site (Netlify → Railway), so
- * SameSite=None; Secure is required.
+ * The session payload (just the user id and expiry) is AES-256-GCM encrypted
+ * inside an httpOnly cookie. It is stateless, survives restarts, and avoids a
+ * native crypto dependency so it works in both containers and Node functions.
  */
 export const SESSION_COOKIE_NAME = 'devmetrics_session';
 
@@ -32,16 +34,60 @@ export const sessionCookieOptions = {
   maxAge: 60 * 60 * 24 * 30, // 30 days
 };
 
-export function setUserSession(request: FastifyRequest, userId: number): void {
-  request.session.set('userId', userId);
+const SESSION_TTL_MS = sessionCookieOptions.maxAge * 1000;
+
+function encodeSession(userId: number): string {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', sessionKey, iv);
+  const plaintext = JSON.stringify({ userId, exp: Date.now() + SESSION_TTL_MS });
+  const encrypted = Buffer.concat([
+    cipher.update(plaintext, 'utf8'),
+    cipher.final(),
+  ]);
+  return Buffer.concat([iv, cipher.getAuthTag(), encrypted]).toString(
+    'base64url',
+  );
 }
 
-export function clearUserSession(request: FastifyRequest): void {
-  request.session.delete();
+function decodeSession(value: string): number | undefined {
+  try {
+    const payload = Buffer.from(value, 'base64url');
+    if (payload.length < 29) return undefined;
+    const iv = payload.subarray(0, 12);
+    const tag = payload.subarray(12, 28);
+    const encrypted = payload.subarray(28);
+    const decipher = createDecipheriv('aes-256-gcm', sessionKey, iv);
+    decipher.setAuthTag(tag);
+    const decoded = Buffer.concat([
+      decipher.update(encrypted),
+      decipher.final(),
+    ]).toString('utf8');
+    const data = JSON.parse(decoded) as { userId?: unknown; exp?: unknown };
+    if (
+      typeof data.userId !== 'number' ||
+      !Number.isInteger(data.userId) ||
+      typeof data.exp !== 'number' ||
+      data.exp <= Date.now()
+    ) {
+      return undefined;
+    }
+    return data.userId;
+  } catch {
+    return undefined;
+  }
+}
+
+export function setUserSession(reply: FastifyReply, userId: number): void {
+  reply.setCookie(SESSION_COOKIE_NAME, encodeSession(userId), sessionCookieOptions);
+}
+
+export function clearUserSession(reply: FastifyReply): void {
+  reply.clearCookie(SESSION_COOKIE_NAME, sessionCookieOptions);
 }
 
 export function getSessionUserId(request: FastifyRequest): number | undefined {
-  return request.session.get('userId');
+  const value = request.cookies[SESSION_COOKIE_NAME];
+  return value ? decodeSession(value) : undefined;
 }
 
 /**
@@ -62,7 +108,7 @@ export const requireAuth: preHandlerHookHandler = async (
   // A public-lookup profile (flagged, tokenless) can never be an authenticated
   // session — reject even if a session cookie somehow references its id.
   if (!user || user.isPublicLookup || !user.accessToken) {
-    clearUserSession(request);
+    clearUserSession(reply);
     return reply.code(401).send({ error: 'unauthorized' });
   }
   request.userId = user.id;

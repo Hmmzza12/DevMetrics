@@ -22,7 +22,7 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
         await app.githubOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
 
       const user = await upsertUserFromToken(token.access_token);
-      setUserSession(request, user.id);
+      setUserSession(reply, user.id);
 
       // Kick off a background sync if the user's data is stale (or brand new).
       await maybeAutoSync(user.id, user.lastSyncedAt ?? null);
@@ -36,7 +36,7 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
 
   // POST /auth/logout — clear the session cookie.
   app.post('/auth/logout', async (request, reply) => {
-    clearUserSession(request);
+    clearUserSession(reply);
     return reply.send({ ok: true });
   });
 
@@ -64,7 +64,7 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       if (!first) {
         return reply.code(404).send({ error: 'no_users_in_db' });
       }
-      setUserSession(request, first.id);
+      setUserSession(reply, first.id);
       return reply.send({ ok: true, username: first.username });
     });
   }

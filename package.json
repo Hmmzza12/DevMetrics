@@ -22,7 +22,6 @@
     "@fastify/cors": "^11.1.0",
     "@fastify/oauth2": "^8.1.2",
     "@fastify/rate-limit": "^11.2.0",
-    "@fastify/secure-session": "^8.2.0",
     "@libsql/client": "^0.15.15",
     "@vercel/functions": "^3.9.9",
     "dotenv": "^17.2.3",
