@@ -1,4 +1,4 @@
-import { UserNotFoundError, RateLimitError } from '../github/client.ts';
+import { UserNotFoundError, RateLimitError } from '../github/client.js';
 import {
   findPublicProfile,
   getPublicStatus,
@@ -8,7 +8,7 @@ import {
   normalizeAndValidate,
   PublicLookupDisabledError,
   triggerPublicSync,
-} from './public-profiles.ts';
+} from './public-profiles.js';
 import {
   getCommitPatterns,
   getHeatmap,
@@ -16,7 +16,7 @@ import {
   getOverview,
   getPRMetrics,
   getRepos,
-} from './metrics.ts';
+} from './metrics.js';
 
 /**
  * Two-profile comparison, built entirely on the public-lookup pipeline: the

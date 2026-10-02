@@ -1,13 +1,13 @@
 import { eq } from 'drizzle-orm';
-import { env } from '../config/env.ts';
-import { db } from '../db/client.ts';
+import { env } from '../config/env.js';
+import { db } from '../db/client.js';
 import {
   commitActivity,
   pullRequests,
   repoLanguages,
   repos,
   users,
-} from '../db/schema.ts';
+} from '../db/schema.js';
 import {
   fetchAllRepos,
   fetchAllReposForLogin,
@@ -17,14 +17,14 @@ import {
   fetchUserIdentity,
   fetchViewer,
   type RateLimit,
-} from '../github/client.ts';
-import { decryptToken } from '../lib/crypto.ts';
+} from '../github/client.js';
+import { decryptToken } from '../lib/crypto.js';
 import {
   getJob,
   markDone,
   markProcessing,
   updateProgress,
-} from './queue.ts';
+} from './queue.js';
 
 /**
  * The full sync pipeline. Runs inside a worker thread. Writes progress to the

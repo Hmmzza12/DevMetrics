@@ -1,11 +1,11 @@
 import { desc, eq } from 'drizzle-orm';
-import { db } from '../db/client.ts';
+import { db } from '../db/client.js';
 import {
   commitActivity,
   pullRequests,
   repoLanguages,
   repos,
-} from '../db/schema.ts';
+} from '../db/schema.js';
 import {
   addDays,
   DAY_LABELS,
@@ -13,7 +13,7 @@ import {
   mondayIndex,
   parseDayKey,
   toDayKey,
-} from '../lib/dates.ts';
+} from '../lib/dates.js';
 
 const MS_PER_HOUR = 1000 * 60 * 60;
 const HORIZON_DAYS = 364; // ~12 months, inclusive of today → 365 days

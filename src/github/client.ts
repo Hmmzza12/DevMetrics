@@ -1,4 +1,4 @@
-import { RATE_LIMIT_FLOOR } from '../config/env.ts';
+import { RATE_LIMIT_FLOOR } from '../config/env.js';
 import {
   COMMITS_QUERY,
   PRS_QUERY,
@@ -7,7 +7,7 @@ import {
   USER_PRS_QUERY,
   USER_REPOS_QUERY,
   VIEWER_QUERY,
-} from './queries.ts';
+} from './queries.js';
 
 const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql';
 

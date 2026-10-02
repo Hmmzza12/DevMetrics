@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { requireAuth } from '../lib/session.ts';
-import { AnthropicNotConfiguredError } from '../services/anthropic.ts';
+import { requireAuth } from '../lib/session.js';
+import { AnthropicNotConfiguredError } from '../services/anthropic.js';
 import {
   getCommitPatterns,
   getHeatmap,
@@ -9,9 +9,9 @@ import {
   getPRMetrics,
   getRepos,
   getReposByLanguage,
-} from '../services/metrics.ts';
-import { getOrGenerateSummary } from '../services/report.ts';
-import { enqueueSync, getLatestJob } from '../sync/index.ts';
+} from '../services/metrics.js';
+import { getOrGenerateSummary } from '../services/report.js';
+import { enqueueSync, getLatestJob } from '../sync/index.js';
 
 /**
  * The `/api/*` surface. Every route requires an authenticated session — the

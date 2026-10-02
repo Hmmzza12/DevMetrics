@@ -1,13 +1,13 @@
 import type { FastifyInstance } from 'fastify';
-import { env, isProd } from '../config/env.ts';
-import { db } from '../db/client.ts';
+import { env, isProd } from '../config/env.js';
+import { db } from '../db/client.js';
 import {
   clearUserSession,
   requireAuth,
   setUserSession,
-} from '../lib/session.ts';
-import { upsertUserFromToken } from '../services/users.ts';
-import { maybeAutoSync } from '../sync/manager.ts';
+} from '../lib/session.js';
+import { upsertUserFromToken } from '../services/users.js';
+import { maybeAutoSync } from '../sync/manager.js';
 
 /**
  * Auth routes. The OAuth *start* route (`GET /auth/github`) is registered by

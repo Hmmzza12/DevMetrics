@@ -1,10 +1,10 @@
 import { and, eq, sql } from 'drizzle-orm';
-import { env, SYNC_STALE_MS } from '../config/env.ts';
-import { db } from '../db/client.ts';
-import { repos, users, type User } from '../db/schema.ts';
-import { fetchUserIdentity } from '../github/client.ts';
-import { enqueueSync } from '../sync/manager.ts';
-import { getActiveJob, getLatestJob } from '../sync/queue.ts';
+import { env, SYNC_STALE_MS } from '../config/env.js';
+import { db } from '../db/client.js';
+import { repos, users, type User } from '../db/schema.js';
+import { fetchUserIdentity } from '../github/client.js';
+import { enqueueSync } from '../sync/manager.js';
+import { getActiveJob, getLatestJob } from '../sync/queue.js';
 
 /**
  * Public-lookup profiles: fetched with the server PAT, stored as flagged,

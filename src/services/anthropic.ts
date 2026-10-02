@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { env } from '../config/env.ts';
+import { env } from '../config/env.js';
 
 /**
  * AI year-in-review summary via the Anthropic API.

@@ -1,7 +1,7 @@
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
-import { env } from '../config/env.ts';
-import * as schema from './schema.ts';
+import { env } from '../config/env.js';
+import * as schema from './schema.js';
 
 /**
  * Shared libSQL/Turso connection + Drizzle instance.

@@ -1,17 +1,17 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../db/client.ts';
-import { commitActivity, users, type User } from '../db/schema.ts';
-import { DAY_LABELS, mondayIndex, parseDayKey } from '../lib/dates.ts';
+import { db } from '../db/client.js';
+import { commitActivity, users, type User } from '../db/schema.js';
+import { DAY_LABELS, mondayIndex, parseDayKey } from '../lib/dates.js';
 import {
   generateSummary,
   type SummaryStats,
-} from './anthropic.ts';
+} from './anthropic.js';
 import {
   getCommitPatterns,
   getLanguages,
   getOverview,
   getPRMetrics,
-} from './metrics.ts';
+} from './metrics.js';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',

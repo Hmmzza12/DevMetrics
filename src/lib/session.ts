@@ -5,9 +5,9 @@ import type {
   FastifyRequest,
   preHandlerHookHandler,
 } from 'fastify';
-import { env, isProd } from '../config/env.ts';
-import { db } from '../db/client.ts';
-import { users } from '../db/schema.ts';
+import { env, isProd } from '../config/env.js';
+import { db } from '../db/client.js';
+import { users } from '../db/schema.js';
 
 /**
  * Session config for @fastify/secure-session.

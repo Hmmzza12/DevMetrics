@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyReply } from 'fastify';
-import { RateLimitError, UserNotFoundError } from '../github/client.ts';
-import type { User } from '../db/schema.ts';
+import { RateLimitError, UserNotFoundError } from '../github/client.js';
+import type { User } from '../db/schema.js';
 import {
   getCommitPatterns,
   getHeatmap,
@@ -9,7 +9,7 @@ import {
   getPRMetrics,
   getRepos,
   getReposByLanguage,
-} from '../services/metrics.ts';
+} from '../services/metrics.js';
 import {
   findPublicProfile,
   getPublicStatus,
@@ -18,8 +18,8 @@ import {
   normalizeAndValidate,
   PublicLookupDisabledError,
   triggerPublicSync,
-} from '../services/public-profiles.ts';
-import { consumeLookups } from '../lib/lookup-budget.ts';
+} from '../services/public-profiles.js';
+import { consumeLookups } from '../lib/lookup-budget.js';
 
 interface UsernameParams {
   username: string;

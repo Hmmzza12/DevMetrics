@@ -1,5 +1,5 @@
 import { migrate } from 'drizzle-orm/libsql/migrator';
-import { db, libsql } from './client.ts';
+import { db, libsql } from './client.js';
 
 /**
  * Apply all generated migrations in ./drizzle to the configured database.

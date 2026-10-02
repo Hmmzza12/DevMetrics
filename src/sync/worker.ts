@@ -1,8 +1,8 @@
 import { parentPort, workerData } from 'node:worker_threads';
-import { libsql } from '../db/client.ts';
-import { RateLimitError, UserNotFoundError } from '../github/client.ts';
-import { markFailed } from './queue.ts';
-import { runSync } from './runner.ts';
+import { libsql } from '../db/client.js';
+import { RateLimitError, UserNotFoundError } from '../github/client.js';
+import { markFailed } from './queue.js';
+import { runSync } from './runner.js';
 
 /**
  * Worker-thread entrypoint. Spawned by the manager with `workerData.jobId`.

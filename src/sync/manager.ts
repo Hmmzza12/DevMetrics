@@ -1,10 +1,10 @@
 import { Worker } from 'node:worker_threads';
 import { waitUntil } from '@vercel/functions';
-import { SYNC_STALE_MS } from '../config/env.ts';
-import type { SyncJob } from '../db/schema.ts';
-import { RateLimitError, UserNotFoundError } from '../github/client.ts';
-import { createJob, markFailed } from './queue.ts';
-import { runSync } from './runner.ts';
+import { SYNC_STALE_MS } from '../config/env.js';
+import type { SyncJob } from '../db/schema.js';
+import { RateLimitError, UserNotFoundError } from '../github/client.js';
+import { createJob, markFailed } from './queue.js';
+import { runSync } from './runner.js';
 
 /**
  * Owns the worker_threads lifecycle for background syncs.

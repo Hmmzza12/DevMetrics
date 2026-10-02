@@ -1,6 +1,6 @@
 import { and, desc, eq, inArray } from 'drizzle-orm';
-import { db } from '../db/client.ts';
-import { syncJobs, type SyncJob } from '../db/schema.ts';
+import { db } from '../db/client.js';
+import { syncJobs, type SyncJob } from '../db/schema.js';
 
 /**
  * Turso-backed job queue for background syncs. No Redis — the `sync_jobs` table

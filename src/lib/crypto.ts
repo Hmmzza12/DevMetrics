@@ -4,7 +4,7 @@ import {
   createHash,
   randomBytes,
 } from 'node:crypto';
-import { env } from '../config/env.ts';
+import { env } from '../config/env.js';
 
 /**
  * AES-256-GCM encryption for GitHub access tokens at rest.

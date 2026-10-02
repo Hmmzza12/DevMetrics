@@ -1,5 +1,5 @@
 import type { OAuth2Namespace } from '@fastify/oauth2';
-import type { User } from '../db/schema.ts';
+import type { User } from '../db/schema.js';
 
 declare module 'fastify' {
   interface FastifyInstance {

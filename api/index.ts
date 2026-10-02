@@ -1,5 +1,5 @@
 import type { InjectOptions, LightMyRequestResponse } from 'fastify';
-import { buildServer } from '../src/server.ts';
+import { buildServer } from '../src/server.js';
 
 export const maxDuration = 300;
 

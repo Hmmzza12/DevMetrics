@@ -1,7 +1,7 @@
-import { db } from '../db/client.ts';
-import { users, type User } from '../db/schema.ts';
-import { fetchViewer } from '../github/client.ts';
-import { encryptToken } from '../lib/crypto.ts';
+import { db } from '../db/client.js';
+import { users, type User } from '../db/schema.js';
+import { fetchViewer } from '../github/client.js';
+import { encryptToken } from '../lib/crypto.js';
 
 /**
  * Create or update a user from a fresh GitHub OAuth token.

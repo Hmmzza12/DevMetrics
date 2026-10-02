@@ -3,8 +3,8 @@ import {
   compareProfiles,
   compareStatus,
   countSidesNeedingSync,
-} from '../services/compare.ts';
-import { consumeLookups } from '../lib/lookup-budget.ts';
+} from '../services/compare.js';
+import { consumeLookups } from '../lib/lookup-budget.js';
 
 interface CompareParams {
   userA: string;

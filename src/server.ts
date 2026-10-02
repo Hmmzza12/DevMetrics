@@ -6,16 +6,16 @@ import oauth2 from '@fastify/oauth2';
 import rateLimit from '@fastify/rate-limit';
 import secureSession from '@fastify/secure-session';
 import Fastify from 'fastify';
-import { env, isProd } from './config/env.ts';
+import { env, isProd } from './config/env.js';
 import {
   SESSION_COOKIE_NAME,
   sessionCookieOptions,
   sessionKey,
-} from './lib/session.ts';
-import { apiRoutes } from './routes/api.ts';
-import { authRoutes } from './routes/auth.ts';
-import { compareRoutes } from './routes/compare.ts';
-import { publicRoutes } from './routes/public.ts';
+} from './lib/session.js';
+import { apiRoutes } from './routes/api.js';
+import { authRoutes } from './routes/auth.js';
+import { compareRoutes } from './routes/compare.js';
+import { publicRoutes } from './routes/public.js';
 
 export async function buildServer() {
   const app = Fastify({

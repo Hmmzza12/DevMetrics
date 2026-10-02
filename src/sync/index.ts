@@ -1,6 +1,6 @@
-export { enqueueSync, maybeAutoSync } from './manager.ts';
+export { enqueueSync, maybeAutoSync } from './manager.js';
 export {
   getActiveJob,
   getLatestJob,
   getJob,
-} from './queue.ts';
+} from './queue.js';
