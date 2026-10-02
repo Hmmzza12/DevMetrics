@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: devmetrics-api-hmmzza12
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeploy: true
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    maxShutdownDelaySeconds: 300
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: FRONTEND_URL
+        value: https://devmetrics-beta.vercel.app
+      - key: TURSO_DATABASE_URL
+        sync: false
+      - key: TURSO_AUTH_TOKEN
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CALLBACK_URL
+        value: https://devmetrics-api-hmmzza12.onrender.com/auth/github/callback
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GITHUB_PAT
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: TOKEN_ENCRYPTION_KEY
+        sync: false
