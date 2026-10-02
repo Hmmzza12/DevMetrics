@@ -1,4 +1,4 @@
-import type { HTTPMethods } from 'fastify';
+import type { InjectOptions, LightMyRequestResponse } from 'fastify';
 import { buildServer } from '../src/server.ts';
 
 export const maxDuration = 300;
@@ -12,13 +12,13 @@ export default {
   async fetch(request: Request): Promise<Response> {
     const app = await appPromise;
     const url = new URL(request.url);
-    const method = request.method as HTTPMethods;
+    const method = request.method as InjectOptions['method'];
     const payload =
       method === 'GET' || method === 'HEAD'
         ? undefined
         : Buffer.from(await request.arrayBuffer());
 
-    const result = await app.inject({
+    const result: LightMyRequestResponse = await app.inject({
       method,
       url: `${url.pathname}${url.search}`,
       headers: Object.fromEntries(request.headers.entries()),
